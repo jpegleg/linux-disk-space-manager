@@ -1,0 +1,11 @@
+[Unit]
+Description=linux-disk-space-manager
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=sh -c 'cd /root && /usr/local/sbin/linux-disk-space-manager policy.yaml -w > /var/log/linux-disk-space-manager.log 2>&1'
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
