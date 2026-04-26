@@ -120,7 +120,7 @@ fn main() {
                         .min(i32::MAX - 1);
                     if state.active_cycles == 1 {
                         log.warn(&format!(
-                            "[{}] disk at {:.1}% — {}% threshold breached (cycle 1/{})",
+                            "[{}] disk at {:.1}% — {}% threshold reached (cycle 1/{})",
                             fs.mount, usage_pct, threshold.usage_percent, health_window
                         ));
                     }
