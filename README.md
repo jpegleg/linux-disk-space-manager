@@ -317,11 +317,11 @@ The default log level the daemon typically uses is `warn` (-w):
 [2026-04-26T01:57:16Z WARN ] - linux disk space manager - "db45prod" - [/tmp] 76.2% — 75% threshold reached (cycle 1/10)
 [2026-04-26T01:57:20Z WARN ] - linux disk space manager - "db45prod" - [/tmp] 96.8% — 90% threshold reached (cycle 1/10)
 [2026-04-26T01:57:22Z WARN ] - linux disk space manager - "db45prod" - [/tmp] 100.0% — 99% threshold reached (cycle 1/10)
-[2026-04-26T01:57:34Z WARN ] - linux disk space manager - "db45prod" - [/tmp] 100.0% >= 75% sustained for 10 cycles — spawning 1 reaction(s) in background thread
+[2026-04-26T01:57:34Z WARN ] - linux disk space manager - "db45prod" - [/tmp] 100.0% >= 75% sustained for 10 cycles — spawning 1 reaction thread
 [2026-04-26T01:57:34Z INFO ] - linux disk space manager - "db45prod" - running reaction: find /tmp -mindepth 1 -mtime +7 -delete
-[2026-04-26T01:57:38Z WARN ] - linux disk space manager - "db45prod" - [/tmp] 100.0% >= 90% sustained for 10 cycles — spawning 1 reaction(s) in background thread
+[2026-04-26T01:57:38Z WARN ] - linux disk space manager - "db45prod" - [/tmp] 100.0% >= 90% sustained for 10 cycles — spawning 1 reaction thread
 [2026-04-26T01:57:38Z INFO ] - linux disk space manager - "db45prod" - running reaction: find /tmp -mindepth 1 -mtime +1 -delete
-[2026-04-26T01:57:40Z WARN ] - linux disk space manager - "db45prod" - [/tmp] 100.0% >= 99% sustained for 10 cycles — spawning 1 reaction(s) in background thread
+[2026-04-26T01:57:40Z WARN ] - linux disk space manager - "db45prod" - [/tmp] 100.0% >= 99% sustained for 10 cycles — spawning 1 reaction thread
 [2026-04-26T01:57:40Z INFO ] - linux disk space manager - "db45prod" - running reaction: rm -rf /tmp/*
 [2026-04-26T01:57:42Z INFO ] - linux disk space manager - "db45prod" - [/tmp] recovered below 75% — now at 5.8% (159.8 MiB/2.7 GiB)
 [2026-04-26T01:57:42Z INFO ] - linux disk space manager - "db45prod" - [/tmp] recovered below 90% — now at 5.8% (159.8 MiB/2.7 GiB)
@@ -346,7 +346,7 @@ $ linux-disk-space-manager ./policy.yaml -d 2>&1 | tee disk_manager_$(date +%Y%m
 [2026-04-26T02:01:47Z INFO ] - linux disk space manager - "db45prod" - watching '/var' — 3.0 GiB/21.1 GiB used (14.1%), 4 threshold(s)
 [2026-04-26T02:01:47Z INFO ] - linux disk space manager - "db45prod" - watching '/' — 9.6 GiB/54.8 GiB used (17.5%), 2 threshold(s)
 [2026-04-26T02:01:47Z INFO ] - linux disk space manager - "db45prod" - watching '/tmp' — 159.8 MiB/2.7 GiB used (5.8%), 3 threshold(s)
-[2026-04-26T02:01:47Z DEBUG] - linux disk space manager - "db45prod" - lifecycle: spawning background pass
+[2026-04-26T02:01:47Z DEBUG] - linux disk space manager - "db45prod" - lifecycle: spawning background thread
 [2026-04-26T02:01:47Z DEBUG] - linux disk space manager - "db45prod" - [/var] 14.1% used (3.0 GiB/21.1 GiB)
 [2026-04-26T02:01:47Z DEBUG] - linux disk space manager - "db45prod" - [/] 17.5% used (9.6 GiB/54.8 GiB)
 [2026-04-26T02:01:47Z DEBUG] - linux disk space manager - "db45prod" - [/tmp] 5.8% used (159.8 MiB/2.7 GiB)
