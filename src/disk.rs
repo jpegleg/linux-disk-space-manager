@@ -14,9 +14,9 @@ use nix::sys::statvfs::statvfs;
 pub fn disk_usage_percent(mount_path: &str) -> f64 {
     match statvfs(mount_path) {
         Ok(stat) => {
-            let fsize = stat.fragment_size() as u64;
-            let total = stat.blocks() as u64 * fsize;
-            let avail = stat.blocks_available() as u64 * fsize;
+            let fsize = stat.fragment_size();
+            let total = stat.blocks();
+            let avail = stat.blocks_available();
             if total == 0 {
                 return 0.0;
             }
@@ -34,9 +34,9 @@ pub fn disk_usage_percent(mount_path: &str) -> f64 {
 pub fn disk_bytes(mount_path: &str) -> (u64, u64) {
     match statvfs(mount_path) {
         Ok(stat) => {
-            let fsize = stat.fragment_size() as u64;
-            let total = stat.blocks() as u64 * fsize;
-            let avail = stat.blocks_available() as u64 * fsize;
+            let fsize = stat.fragment_size();
+            let total = stat.blocks();
+            let avail = stat.blocks_available();
             let used = total.saturating_sub(avail);
             (used, total)
         }
