@@ -268,6 +268,10 @@ Write your own policy YAML for the needs of the system running the daemon.
 
 Use caution, and make sure that the actions are desired and in alignment with any required data retention policies or security policies.
 
+The default policy location that the provided systemd unit file and packages use is /root/policy.yaml. This location and file name can be anything.
+So if we want to run as non-root, we could have a policy in /home/bob/etc/bob-cleaner.yaml and have the service configured to run as bob and that path for the policy instead.
+
+
 ## installing
 
 Installation methods being worked on include:
@@ -283,10 +287,7 @@ use release debian package: sudo dpkg -i linux-disk-space-manager.deb
 
 ```
 
-More information about installation will be added to this section.
-
 ## logging
-
 
 The default log level the daemon typically uses is `warn` (-w):
 
