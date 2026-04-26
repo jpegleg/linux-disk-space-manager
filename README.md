@@ -287,6 +287,14 @@ use release debian package: sudo dpkg -i linux-disk-space-manager.deb
 
 ```
 
+There is a provided example systemd unit file that is also used in the debian package example. To manually install the systemd unit file:
+
+```
+sudo cp linux-disk-space-manager.service /etc/systemd/system/
+sudo systemctl enable linux-disk-space-manager
+sudo systemctl start linux-disk-space-manager
+```
+
 ## logging
 
 The default log level the daemon typically uses is `warn` (-w):
