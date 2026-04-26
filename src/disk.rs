@@ -14,14 +14,17 @@ use nix::sys::statvfs::statvfs;
 pub fn disk_usage_percent(mount_path: &str) -> f64 {
     match statvfs(mount_path) {
         Ok(stat) => {
-            let fsize = stat.fragment_size() as u64;
-            let total = stat.blocks() * fsize;
-            let avail = stat.blocks_available() * fsize;
-            if total == 0 {
+            let total = stat.blocks() as u64;
+            let free = stat.blocks_free() as u64;
+            let avail = stat.blocks_available() as u64;
+            let used = total.saturating_sub(free);
+            let capacity = used + avail;
+
+            if capacity == 0 {
                 return 0.0;
             }
-            let used = total.saturating_sub(avail);
-            (used as f64 / total as f64) * 100.0
+
+            (used as f64 / capacity as f64) * 100.0
         }
         Err(e) => {
             eprintln!("ERROR: statvfs('{}') failed: {}", mount_path, e);
@@ -30,21 +33,21 @@ pub fn disk_usage_percent(mount_path: &str) -> f64 {
     }
 }
 
-/// Returns (used_bytes, total_bytes) for human-readable log lines.
 pub fn disk_bytes(mount_path: &str) -> (u64, u64) {
     match statvfs(mount_path) {
         Ok(stat) => {
-            let fsize = stat.fragment_size() as u64;
-            let total = stat.blocks() * fsize;
-            let avail = stat.blocks_available() * fsize;
-            let used = total.saturating_sub(avail);
-            (used, total)
+            let fsize    = stat.fragment_size()    as u64;
+            let total    = stat.blocks()           as u64;
+            let free     = stat.blocks_free()      as u64;
+            let avail    = stat.blocks_available() as u64;
+            let used     = total.saturating_sub(free);
+            let capacity = used + avail;
+            (used * fsize, capacity * fsize)
         }
         Err(_) => (0, 0),
     }
 }
 
-/// Format bytes as a human-readable string (GiB / MiB / KiB / B).
 pub fn human_bytes(bytes: u64) -> String {
     const GIB: u64 = 1 << 30;
     const MIB: u64 = 1 << 20;
