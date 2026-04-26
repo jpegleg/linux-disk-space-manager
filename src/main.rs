@@ -214,7 +214,7 @@ fn main() {
 
 fn print_help(prog: &str) {
     println!(
-        r#"linux-disk-space-manager — Linux disk-space management daemon
+        r#"linux-disk-space-manager v1.0.3 — Linux disk-space management daemon
 
 USAGE:
     {prog} <policy.yaml> [-d|-w|-q]
@@ -258,14 +258,16 @@ POLICY FILE STRUCTURE:
         max_size_mb: 512
 
 NOTES:
-    • Thresholds are independent — each has its own health counter and
+    - Thresholds are independent — each has its own health counter and
       triggered state.  Multiple levels can be active simultaneously.
-    • A threshold fires its commands exactly once per breach event.
+    - A threshold fires its commands exactly once per breach event.
       It resets when usage drops below the threshold percent.
-    • 'preserve' patterns prevent lifecycle management from touching matched
+    - 'preserve' patterns prevent lifecycle management from touching matched
       files.  They do NOT intercept commands you run via threshold reactions.
-    • Commands are run via 'sh -c', so pipes, redirects, and shell builtins
+    - Commands are run via 'sh -c', so pipes, redirects, and shell builtins
       all work.  Failures are logged but do not stop other commands.
+    - When multiple thresholds are reached in a single cycle, all reactions are run.
+    - The max_size_mb is in mebibytes, not megabytes.
 "#,
         prog = prog
     );
