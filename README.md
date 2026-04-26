@@ -305,12 +305,6 @@ The default log level the daemon typically uses is `warn` (-w):
 [2026-04-26T01:55:28Z INFO ] - linux disk space manager - "db45prod" - watching '/' — 9.6 GiB/54.8 GiB used (17.5%), 2 threshold(s)
 [2026-04-26T01:55:28Z INFO ] - linux disk space manager - "db45prod" - watching '/tmp' — 159.8 MiB/2.7 GiB used (5.8%), 3 threshold(s)
 [2026-04-26T01:55:28Z WARN ] - linux disk space manager - "db45prod" - lifecycle: truncating (312 MiB >= 10 MiB): /var/log/turkey.log
-root@db45prod:~/linux-disk-space-manager# tail -f /var/log/linux-disk-space-manager.log
-[2026-04-26T01:55:28Z INFO ] - linux disk space manager - "db45prod" - linux-disk-space-manager v1.0.3 started  policy=policy.yaml  interval=2s  health_window=10  lifecycle_interval=60s
-[2026-04-26T01:55:28Z INFO ] - linux disk space manager - "db45prod" - watching '/var' — 3.3 GiB/21.1 GiB used (15.5%), 4 threshold(s)
-[2026-04-26T01:55:28Z INFO ] - linux disk space manager - "db45prod" - watching '/' — 9.6 GiB/54.8 GiB used (17.5%), 2 threshold(s)
-[2026-04-26T01:55:28Z INFO ] - linux disk space manager - "db45prod" - watching '/tmp' — 159.8 MiB/2.7 GiB used (5.8%), 3 threshold(s)
-[2026-04-26T01:55:28Z WARN ] - linux disk space manager - "db45prod" - lifecycle: truncating (312 MiB >= 10 MiB): /var/log/turkey.log
 [2026-04-26T01:56:28Z WARN ] - linux disk space manager - "db45prod" - lifecycle: truncating (938 MiB >= 10 MiB): /var/log/turkey.log
 [2026-04-26T01:57:16Z WARN ] - linux disk space manager - "db45prod" - [/tmp] 76.2% — 75% threshold reached (cycle 1/10)
 [2026-04-26T01:57:20Z WARN ] - linux disk space manager - "db45prod" - [/tmp] 96.8% — 90% threshold reached (cycle 1/10)
