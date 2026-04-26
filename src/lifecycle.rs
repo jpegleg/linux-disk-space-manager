@@ -225,7 +225,7 @@ fn compress_file(path: &Path, log: &Logger) {
 
     if let Err(e) = encoder.finish() {
         log.error(&format!(
-            "lifecycle: gzip finalise failed for '{}': {}",
+            "lifecycle: gzip finalize failed for '{}': {}",
             gz_path.display(), e
         ));
         let _ = fs::remove_file(&gz_path);
