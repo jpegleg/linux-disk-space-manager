@@ -63,6 +63,8 @@ lifecycle:
     max_age_days: 30
   - pattern: /var/log/clamav/*.gz
     max_age_days: 30
+  - pattern: /var/log/crazy_app.log
+    max_size_mb: 100
 
 ```
 
