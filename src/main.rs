@@ -117,7 +117,7 @@ fn main() {
                 let rules = lifecycle_rules.clone();
                 let pres = preserve.clone();
                 let llog = log.clone();
-                log.debug("lifecycle: spawning background pass");
+                log.debug("lifecycle: spawning background thread");
                 lifecycle_handle = Some(thread::spawn(move || {
                     apply_lifecycle(&rules, &pres, &llog);
                 }));
