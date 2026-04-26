@@ -211,3 +211,62 @@ fn main() {
         thread::sleep(sleep_for);
     }
 }
+
+fn print_help(prog: &str) {
+    println!(
+        r#"linux-disk-space-manager — Linux disk-space management daemon
+
+USAGE:
+    {prog} <policy.yaml> [-d|-w|-q]
+
+ARGUMENTS:
+    <policy.yaml>   Path to YAML policy file (see below)
+    -d              Debug logging — per-cycle disk stats, command output
+    -w              Warn  logging — threshold events and reactions only
+    -q              Quiet         — errors to stderr only
+
+POLICY FILE STRUCTURE:
+
+    daemon:
+      interval_seconds: 10         # poll every 10 s (default)
+      health_window: 5             # cycles before firing reactions (default)
+      lifecycle_interval_seconds: 3600   # run lifecycle rules hourly
+
+    filesystems:
+      - mount: /
+        thresholds:
+          - usage_percent: 70
+            commands:
+              - "journalctl --vacuum-time=30d"
+          - usage_percent: 85
+            commands:
+              - "journalctl --vacuum-time=15d"
+          - usage_percent: 90
+            commands:
+              - "journalctl --vacuum-time=1d"
+              - "apt-get clean -y"
+
+    preserve:
+      - /var/log/critical-app.log
+      - /var/log/audit/*.log         # glob patterns supported
+
+    lifecycle:
+      - pattern: /var/log/myapp/*.log
+        compress_after_days: 7
+        delete_compressed_after_days: 90
+        max_age_days: 7
+        max_size_mb: 512
+
+NOTES:
+    • Thresholds are independent — each has its own health counter and
+      triggered state.  Multiple levels can be active simultaneously.
+    • A threshold fires its commands exactly once per breach event.
+      It resets when usage drops below the threshold percent.
+    • 'preserve' patterns prevent lifecycle management from touching matched
+      files.  They do NOT intercept commands you run via threshold reactions.
+    • Commands are run via 'sh -c', so pipes, redirects, and shell builtins
+      all work.  Failures are logged but do not stop other commands.
+"#,
+        prog = prog
+    );
+}
