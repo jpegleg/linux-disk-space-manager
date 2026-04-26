@@ -3,7 +3,7 @@
 # linux disk space manager
 
 This program is a controller daemon that runs on the underlying linux operating sytsem, in virtual machines or baremetal.
-There is a single YAML policy file that creates the rules for how disk space usage is responded to. 
+There is a single YAML policy file that creates the rules for how disk space usage is responded to.
 The YAML file also allows logrotate-like file lifecycle management.
 
 The daemon runs as root typically, so that it can manage the core of the system completely without restriction.
@@ -70,7 +70,7 @@ lifecycle:
 A common policy mistake is forgetting that the reactions will not respect a preserve rule: reactions are potentially destructive and can cause data loss, they run as root on the underlying system if the daemon is run as root, which is default.
 </b>
 
-The policy YAML is _everything_, and is a sensitive file in terms of write access, since it is basically root command injection as a service. 
+The policy YAML is _everything_, and is a sensitive file in terms of write access, since it is basically root command injection as a service.
 
 Protect the YAML, `chmod 600 policy.yaml; chown root:root policy.yaml` and take special care about how the file is created, maintained, reviewed, tested, deployed, and so on.
 
@@ -101,9 +101,9 @@ The default log level the daemon typically uses is `warn` (-w):
 [2026-04-25T21:26:41Z INFO ] - linux disk space manager - "db45prod" - watching '/var' — 2.3 GiB/9.1 GiB used, 4 threshold(s) configured
 [2026-04-25T21:26:41Z INFO ] - linux disk space manager - "db45prod" - watching '/' — 19.8 GiB/22.7 GiB used, 2 threshold(s) configured
 [2026-04-25T21:26:41Z INFO ] - linux disk space manager - "db45prod" - watching '/tmp' — 111.3 MiB/1.8 GiB used, 3 threshold(s) configured
-[2026-04-25T21:27:33Z WARN ] - linux disk space manager - "db45prod" - [/tmp] disk at 97.8% — 75% threshold breached (cycle 1/10)
-[2026-04-25T21:27:33Z WARN ] - linux disk space manager - "db45prod" - [/tmp] disk at 97.8% — 90% threshold breached (cycle 1/10)
-[2026-04-25T21:27:37Z WARN ] - linux disk space manager - "db45prod" - [/tmp] disk at 100.0% — 99% threshold breached (cycle 1/10)
+[2026-04-25T21:27:33Z WARN ] - linux disk space manager - "db45prod" - [/tmp] disk at 97.8% — 75% threshold reached (cycle 1/10)
+[2026-04-25T21:27:33Z WARN ] - linux disk space manager - "db45prod" - [/tmp] disk at 97.8% — 90% threshold reached (cycle 1/10)
+[2026-04-25T21:27:37Z WARN ] - linux disk space manager - "db45prod" - [/tmp] disk at 100.0% — 99% threshold reached (cycle 1/10)
 [2026-04-25T21:27:51Z WARN ] - linux disk space manager - "db45prod" - [/tmp] disk sustained at 100.0% >= 75% for 10 cycle(s) — running 1 reaction command(s)
 [2026-04-25T21:27:51Z INFO ] - linux disk space manager - "db45prod" - running reaction: find /tmp -mindepth 1 -mtime +7 -delete
 [2026-04-25T21:27:51Z WARN ] - linux disk space manager - "db45prod" - [/tmp] disk sustained at 100.0% >= 90% for 10 cycle(s) — running 1 reaction command(s)
@@ -128,7 +128,7 @@ This is especially useful for test and QA systems, testing the policy YAML and m
 Here is an example of running the linux-disk-space-manager manually in debug mode and having /tmp fill to 100% with policy that effectively cleans up from that condition:
 
 ```
-$ linux-disk-space-manager policy.yaml -d 2>&1 | tee disk_manager_$(date +%Y%m%d%H%M%S).log 
+$ linux-disk-space-manager policy.yaml -d 2>&1 | tee disk_manager_$(date +%Y%m%d%H%M%S).log
 [2026-04-25T21:13:07Z INFO ] - "db45prod" - linux-disk-space-manager started  policy=policy.yaml  interval=2s  health_window=10 cycles  lifecycle_interval=3600s
 [2026-04-25T21:13:07Z INFO ] - "db45prod" - watching '/var' — 2.3 GiB/9.1 GiB used, 4 threshold(s) configured
 [2026-04-25T21:13:07Z INFO ] - "db45prod" - watching '/' — 19.8 GiB/22.7 GiB used, 2 threshold(s) configured
@@ -152,13 +152,13 @@ $ linux-disk-space-manager policy.yaml -d 2>&1 | tee disk_manager_$(date +%Y%m%d
 [2026-04-25T21:15:11Z DEBUG] - "db45prod" - [/var] 24.9% used (2.3 GiB/9.1 GiB)
 [2026-04-25T21:15:11Z DEBUG] - "db45prod" - [/] 87.1% used (19.8 GiB/22.7 GiB)
 [2026-04-25T21:15:11Z DEBUG] - "db45prod" - [/tmp] 92.2% used (1.7 GiB/1.8 GiB)
-[2026-04-25T21:15:11Z WARN ] - "db45prod" - [/tmp] disk at 92.2% — 75% threshold breached (cycle 1/10)
-[2026-04-25T21:15:11Z WARN ] - "db45prod" - [/tmp] disk at 92.2% — 90% threshold breached (cycle 1/10)
+[2026-04-25T21:15:11Z WARN ] - "db45prod" - [/tmp] disk at 92.2% — 75% threshold reached (cycle 1/10)
+[2026-04-25T21:15:11Z WARN ] - "db45prod" - [/tmp] disk at 92.2% — 90% threshold reached (cycle 1/10)
 [2026-04-25T21:15:11Z DEBUG] - "db45prod" - cycle done in 0ms — sleeping 1999ms
 [2026-04-25T21:15:13Z DEBUG] - "db45prod" - [/var] 24.9% used (2.3 GiB/9.1 GiB)
 [2026-04-25T21:15:13Z DEBUG] - "db45prod" - [/] 87.1% used (19.8 GiB/22.7 GiB)
 [2026-04-25T21:15:13Z DEBUG] - "db45prod" - [/tmp] 100.0% used (1.8 GiB/1.8 GiB)
-[2026-04-25T21:15:13Z WARN ] - "db45prod" - [/tmp] disk at 100.0% — 99% threshold breached (cycle 1/10)
+[2026-04-25T21:15:13Z WARN ] - "db45prod" - [/tmp] disk at 100.0% — 99% threshold reached (cycle 1/10)
 [2026-04-25T21:15:13Z DEBUG] - "db45prod" - cycle done in 0ms — sleeping 1999ms
 [2026-04-25T21:15:15Z DEBUG] - "db45prod" - [/var] 24.9% used (2.3 GiB/9.1 GiB)
 [2026-04-25T21:15:15Z DEBUG] - "db45prod" - [/] 87.1% used (19.8 GiB/22.7 GiB)
