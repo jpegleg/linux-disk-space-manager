@@ -65,7 +65,7 @@ lifecycle:
   - pattern: /var/log/clamav/*.gz
     max_age_days: 30
   - pattern: /var/log/crazy_app.log
-    max_size_mb: 100
+    max_size_mb: 100 # truncate after file reaches 100 Mebibytes (1024 * 1024 bytes is a mebibyte) 
 
 ```
 
