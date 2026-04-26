@@ -154,7 +154,7 @@ fn main() {
 
                     if state.active_cycles >= health_window && !state.triggered {
                         log.warn(&format!(
-                            "[{}] {:.1}% >= {}% sustained for {} cycles — spawning {} reaction(s) in background thread",
+                            "[{}] {:.1}% >= {}% sustained for {} cycles — spawning {} reaction thread",
                             fs.mount,
                             usage_pct,
                             threshold.usage_percent,
