@@ -295,6 +295,14 @@ sudo systemctl enable linux-disk-space-manager
 sudo systemctl start linux-disk-space-manager
 ```
 
+To manually install a policy, here is an example approach:
+
+```
+sudo cp policy.yaml /root/policy.yaml
+sudo chown root:root /root/policy.yaml
+sudo chmod 600 /root/policy.yaml
+```
+
 ## logging
 
 The default log level the daemon typically uses is `warn` (-w):
@@ -333,7 +341,7 @@ This is especially useful for test and QA systems, testing the policy YAML and m
 Here is an example of running the linux-disk-space-manager manually in debug mode and having /tmp fill to 100% with policy that effectively cleans up from that condition:
 
 ```
-$ linux-disk-space-manager policy.yaml -d 2>&1 | tee disk_manager_$(date +%Y%m%d%H%M%S).log
+$ linux-disk-space-manager ./policy.yaml -d 2>&1 | tee disk_manager_$(date +%Y%m%d%H%M%S).log
 [2026-04-26T02:01:47Z INFO ] - linux disk space manager - "db45prod" - linux-disk-space-manager v1.0.3 started  policy=policy.yaml  interval=2s  health_window=10  lifecycle_interval=60s
 [2026-04-26T02:01:47Z INFO ] - linux disk space manager - "db45prod" - watching '/var' — 3.0 GiB/21.1 GiB used (14.1%), 4 threshold(s)
 [2026-04-26T02:01:47Z INFO ] - linux disk space manager - "db45prod" - watching '/' — 9.6 GiB/54.8 GiB used (17.5%), 2 threshold(s)
