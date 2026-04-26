@@ -381,3 +381,8 @@ $ linux-disk-space-manager ./policy.yaml -d 2>&1 | tee disk_manager_$(date +%Y%m
 ...
 ```
 
+# change log and version use
+
+1.0.4 - fixes important mistake in disk calculation
+
+1.0.3 and older - don't use these
