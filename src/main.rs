@@ -69,7 +69,7 @@ fn main() {
         .unwrap_or(interval_secs);
 
     log.info(&format!(
-        "linux-disk-space-manager v1.0.5 started  policy={}  interval={}s  health_window={}  lifecycle_interval={}s",
+        "linux-disk-space-manager v1.0.7 started  policy={}  interval={}s  health_window={}  lifecycle_interval={}s",
         policy_path, interval_secs, health_window, lifecycle_interval_secs
     ));
 
@@ -214,7 +214,7 @@ fn main() {
 
 fn print_help(prog: &str) {
     println!(
-        r#"linux-disk-space-manager v1.0.5 — Linux disk-space management daemon
+        r#"linux-disk-space-manager v1.0.7 — Linux disk-space management daemon
 
 USAGE:
     {prog} <policy.yaml> [-d|-w|-q]
