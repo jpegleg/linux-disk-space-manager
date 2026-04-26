@@ -79,7 +79,7 @@ pub struct LifecycleRule {
     /// Delete uncompressed files older than this many days.
     pub max_age_days: Option<u64>,
 
-    /// Delete uncompressed files larger than this many mebibytes (1 MiB = 2²⁰ bytes).
+    /// Truncate uncompressed files larger than this many mebibytes (1 MiB = 2²⁰ bytes).
     pub max_size_mb: Option<u64>,
 
     /// Compress files older than this many days (gzip, creates <file>.gz and
