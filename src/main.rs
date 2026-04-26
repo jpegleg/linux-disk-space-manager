@@ -13,6 +13,7 @@ use lifecycle::apply_lifecycle;
 use logger::{Level, Logger};
 use runner::run_commands;
 
+#[derive(Default)]
 struct ThresholdState {
     active_cycles: i32,
     triggered: bool,
