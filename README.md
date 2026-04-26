@@ -45,7 +45,7 @@ filesystems:
       - usage_percent: 97
         commands:
           - "sync && echo 3 > /proc/sys/vm/drop_caches"
-          - "nice find / -type f -name *.log -exec cp /dev/null {} \ ; &"
+          - "nice find / -type f -name *.log -exec cp /dev/null {} \\;"
   - mount: /tmp
     thresholds:
       - usage_percent: 75
@@ -60,10 +60,9 @@ filesystems:
 
 lifecycle:
   - pattern: /var/log/postgresql/*.gz
-    delete_compressed_after_days: 90
-    max_age_days: 90
-  - pattern: /var/crash/*.core
-    max_age_days: 7
+    max_age_days: 30
+  - pattern: /var/log/clamav/*.gz
+    max_age_days: 30
 
 ```
 
