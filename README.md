@@ -2,7 +2,7 @@
 
 # linux disk space manager
 
-This program is a controller daemon that runs on the underlying linux operating sytsem, in virtual machines or baremetal.
+This program is a controller daemon that runs on the underlying linux operating system, in virtual machines or baremetal.
 There is a single YAML policy file that creates the rules for how disk space usage is responded to.
 The YAML file also allows logrotate-like file lifecycle management.
 
