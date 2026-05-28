@@ -1,6 +1,6 @@
 [package]
 name = "linux-disk-space-manager"
-version = "1.0.8"
+version = "1.0.7"
 edition = "2021"
 authors = ["Keegan Bowen <carefuldata@protonmail.com>"]
 license = "MIT"
@@ -30,3 +30,4 @@ version = "=2.6.0"
 opt-level   = 3
 strip       = true
 lto         = true
+panic       = "abort"
