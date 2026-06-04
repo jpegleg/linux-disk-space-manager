@@ -2,6 +2,7 @@
 //
 // Uses POSIX statvfs (via the nix crate) so it works without /proc parsing on
 // any Linux variant.  Returns a percentage in the range [0.0, 100.0].
+// Both inode use and storage use are checked.
 
 use nix::sys::statvfs::statvfs;
 
@@ -11,14 +12,30 @@ use nix::sys::statvfs::statvfs;
 ///
 /// Returns 0.0 on error (statvfs failure or zero-size filesystem) and prints
 /// the error to stderr so the daemon can keep running.
+///
+/// Both inode percent and blocks percent are checked, using whichever value
+/// is higher in the output. The default is block usage percent, but if
+/// the inode usage is high, that will also count against the config
+/// threshold. So each configured threshold applies to both inodes and blocks.
 pub fn disk_usage_percent(mount_path: &str) -> f64 {
     match statvfs(mount_path) {
         Ok(stat) => {
             let total = stat.blocks() as u64;
             let free = stat.blocks_free() as u64;
             let avail = stat.blocks_available() as u64;
-            let used = total.saturating_sub(free);
-            let capacity = used + avail;
+            let mut used = total.saturating_sub(free);
+            let mut capacity = used + avail;
+
+            let itotal = stat.files() as u64;
+            let ifree = stat.files_free() as u64;
+            let iavail = stat.files_available() as u64;
+            let iused = itotal.saturating_sub(ifree);
+            let icapacity = iused + iavail;
+
+            if iused > used {
+                used = iused;
+                capacity = icapacity;
+            };
 
             if capacity == 0 {
                 return 0.0;
@@ -40,8 +57,19 @@ pub fn disk_bytes(mount_path: &str) -> (u64, u64) {
             let total = stat.blocks() as u64;
             let free = stat.blocks_free() as u64;
             let avail = stat.blocks_available() as u64;
-            let used = total.saturating_sub(free);
-            let capacity = used + avail;
+            let mut used = total.saturating_sub(free);
+            let mut capacity = used + avail;
+            let itotal = stat.files() as u64;
+            let ifree = stat.files_free() as u64;
+            let iavail = stat.files_available() as u64;
+            let iused = itotal.saturating_sub(ifree);
+            let icapacity = iused + iavail;
+
+            if iused > used {
+                used = iused;
+                capacity = icapacity;
+            };
+
             (used * fsize, capacity * fsize)
         }
         Err(_) => (0, 0),
