@@ -69,7 +69,7 @@ fn main() {
         .unwrap_or(interval_secs);
 
     log.info(&format!(
-        "linux-disk-space-manager v1.0.7 started  policy={}  interval={}s  health_window={}  lifecycle_interval={}s",
+        "linux-disk-space-manager v1.0.8 started  policy={}  interval={}s  health_window={}  lifecycle_interval={}s",
         policy_path, interval_secs, health_window, lifecycle_interval_secs
     ));
 
@@ -172,7 +172,7 @@ fn main() {
                         state.triggered = true;
                     }
 
-                    let reminder_period = (health_window * 10).max(20) as i32;
+                    let reminder_period = (health_window * 10).max(600) as i32;
                     if state.triggered && state.active_cycles % reminder_period == 0 {
                         log.warn(&format!(
                             "[{}] disk still at {:.1}% >= {}% — {} cycles since reactions fired",
