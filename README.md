@@ -57,7 +57,7 @@ filesystems:
           - "find /tmp -mindepth 1 -mtime +1 -delete"
       - usage_percent: 99
         commands:
-          - "rm -rf /tmp/*"
+          - "nice find /tmp -type f -exec rm -f {} \\ ;"
 
 lifecycle:
   - pattern: /var/log/postgresql/*.gz
@@ -182,7 +182,7 @@ filesystems:
 
       - usage_percent: 97
         commands:
-          - "rm -rf /tmp/*"
+          - "rm -rf /tmp/* || find /tmp -exec rm -rf {} \\;"
 
 ########################################
 # LOG LIFECYCLE MANAGEMENT
@@ -271,6 +271,9 @@ Use caution, and make sure that the actions are desired and in alignment with an
 The default policy location that the provided systemd unit file and packages use is /root/policy.yaml. This location and file name can be anything.
 So if we want to run as non-root, we could have a policy in /home/bob/etc/bob-cleaner.yaml and have the service configured to run as bob and that path for the policy instead.
 
+Both storage (blocks used/available) and inodes (files used/available) are used in the disk checks. The block usage is the default, meaning that `df` is similar to the standard
+metric, however if inodes (similar to `df -i`) usage crosses a threshold, that metric will be used. This way if either storage percent or files percent exceed config thresholds,
+the actions will be triggered. There are not separate blocks vs inode thresholds.
 
 ## installing
 
@@ -382,6 +385,8 @@ $ linux-disk-space-manager ./policy.yaml -d 2>&1 | tee disk_manager_$(date +%Y%m
 ```
 
 # change log and version use
+
+1.0.8 - add inode calculation to the usage metrics, increase max wait period between reminder log linesBump version to 1.0.8
 
 1.0.7 - fix version printing in the logs, align to release version
 
