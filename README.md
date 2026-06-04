@@ -182,7 +182,7 @@ filesystems:
 
       - usage_percent: 97
         commands:
-          - "rm -rf /tmp/* || find /tmp/* -exec rm -rf {} \\;"
+          - "rm -rf /tmp/* || find /tmp/ -type f -exec rm -f {} \\;"
 
 ########################################
 # LOG LIFECYCLE MANAGEMENT
