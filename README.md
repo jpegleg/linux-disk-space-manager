@@ -386,7 +386,7 @@ $ linux-disk-space-manager ./policy.yaml -d 2>&1 | tee disk_manager_$(date +%Y%m
 
 # change log and version use
 
-1.0.8 - add inode calculation to the usage metrics, increase max wait period between reminder log linesBump version to 1.0.8
+1.0.8 - add inode calculation to the usage metrics, increase max wait period between reminder log lines
 
 1.0.7 - fix version printing in the logs, align to release version
 
