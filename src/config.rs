@@ -1,4 +1,4 @@
-// config.rs — YAML policy deserialisation
+// config.rs - YAML policy deserialisation
 //
 // The policy file is the single source of truth for the daemon's behaviour.
 // Every field that has a sensible default is wrapped in Option<T> so the user
@@ -49,7 +49,7 @@ pub struct DaemonConfig {
 pub struct FilesystemPolicy {
     /// Absolute path of the mount point (or any path on the target filesystem).
     /// statvfs is called on this path, so "/var" works even if it is not a
-    /// separate mount — it will report figures for whichever filesystem owns it.
+    /// separate mount - it will report figures for whichever filesystem owns it.
     pub mount: String,
 
     /// Ordered list of thresholds.  They are sorted ascending at load time so
