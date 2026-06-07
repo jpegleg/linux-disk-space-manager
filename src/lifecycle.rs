@@ -1,4 +1,4 @@
-// lifecycle.rs — logrotate-style file lifecycle management
+// lifecycle.rs - logrotate-style file lifecycle management
 //
 // Runs on a configurable schedule (lifecycle_interval_seconds) that is
 // typically much slower than the main polling loop so it does not add overhead
