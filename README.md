@@ -428,10 +428,34 @@ lifecycle:
 
 ```
 
+
 Note that the system slice is commonly `/home` not `/home/bob`, so the metrics in bob's case are actually from the `/home` slice,
 so another user could fill up that slice, and non of bob's reactions would solve such a condition.
 
 But if each user has their own linux-disk-space-manager scope and policy, then all of `/home` is covered generally.
+
+And bob running his policiy in the foreground, such as in a tmux session.
+
+```
+ λ linux-disk-space-manager policy.yaml -d
+[2026-06-07T22:09:41Z INFO ] - linux disk space manager - "myPC" - linux-disk-space-manager v1.0.5 started  policy=policy.yaml  interval=1s  health_window=3  lifecycle_interval=600s
+[2026-06-07T22:09:41Z INFO ] - linux disk space manager - "myPC" - watching '/home/bob/' — 64.8 GiB/784.9 GiB used (8.3%), 3 threshold(s)
+[2026-06-07T22:09:41Z DEBUG] - linux disk space manager - "myPC" - lifecycle: spawning background thread
+[2026-06-07T22:09:41Z DEBUG] - linux disk space manager - "myPC" - [/home/bob/] 8.3% used (64.8 GiB/784.9 GiB)
+[2026-06-07T22:09:41Z DEBUG] - linux disk space manager - "myPC" - cycle completed 0ms — sleeping 999ms
+[2026-06-07T22:09:41Z DEBUG] - linux disk space manager - "myPC" - lifecycle: running 1 rule(s)
+[2026-06-07T22:09:41Z DEBUG] - linux disk space manager - "myPC" - lifecycle: ok [0 days, 0 MiB] /home/bob/log/hunter/ps.log.gz
+[2026-06-07T22:09:42Z DEBUG] - linux disk space manager - "myPC" - [/home/bob/] 8.3% used (64.8 GiB/784.9 GiB)
+[2026-06-07T22:09:42Z DEBUG] - linux disk space manager - "myPC" - cycle completed 0ms — sleeping 999ms
+[2026-06-07T22:09:43Z DEBUG] - linux disk space manager - "myPC" - [/home/bob/] 8.3% used (64.8 GiB/784.9 GiB)
+[2026-06-07T22:09:43Z DEBUG] - linux disk space manager - "myPC" - cycle completed 0ms — sleeping 999ms
+[2026-06-07T22:09:44Z DEBUG] - linux disk space manager - "myPC" - [/home/bob/] 8.3% used (64.8 GiB/784.9 GiB)
+[2026-06-07T22:09:44Z DEBUG] - linux disk space manager - "myPC" - cycle completed 0ms — sleeping 999ms
+[2026-06-07T22:09:45Z DEBUG] - linux disk space manager - "myPC" - [/home/bob/] 8.3% used (64.8 GiB/784.9 GiB)
+[2026-06-07T22:09:45Z DEBUG] - linux disk space manager - "myPC" - cycle completed 0ms — sleeping 999ms
+
+```
+
 
 Rather than having many copies and individual scopes, having a singular instance as root is more simple, easier to manager,
 reduces load on the system, and is less likely to encounter limits because of permissions or login groups, etc. One of 
