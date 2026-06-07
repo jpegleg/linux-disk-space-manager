@@ -1,4 +1,4 @@
-// runner.rs — execute threshold reaction commands
+// runner.rs - execute threshold reaction commands
 //
 // Each command is run as a child process via `sh -c` so the full POSIX shell
 // feature set (pipes, redirects, compound commands) is available in policy YAML.
