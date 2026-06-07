@@ -6,6 +6,13 @@ This program is a controller daemon that runs on the underlying linux operating 
 There is a single YAML policy file that creates the rules for how disk space usage is responded to.
 The YAML file also allows logrotate-like file lifecycle management.
 
+It can also be run as any system user on any system slice, interactively or as a service/background task.
+So a restricted user "bob" could still run the linux-disk-space-manager within "bob" unix permissions scope.
+
+Linux-disk-space-manager can save systems from crashing because the log files filled up the disk slice, and has other administrative uses.
+
+The way it is recommended to run is as an administrative user, so it can clean up any system slice.
+
 The daemon runs as root typically so that it can manage the core of the system completely without restriction.
 It is possible to run linux-disk-space-manager as a non-root user, it can be scoped to any user or system slice target.
 
@@ -73,7 +80,7 @@ lifecycle:
 A common policy mistake is forgetting that the reactions will not respect a preserve rule: reactions are potentially destructive and can cause data loss, they run as root on the underlying system if the daemon is run as root, which is default.
 </b>
 
-The policy YAML is _everything_, and is a sensitive file in terms of write access, since it is basically root command injection as a service.
+The policy YAML is _everything_ for how effective the cleaning actually is, and is a sensitive file in terms of write access, since it likely is basically root command injection as a service.
 
 Protect the YAML, `chmod 600 policy.yaml; chown root:root policy.yaml` and take special care about how the file is created, maintained, reviewed, tested, deployed, and so on.
 
@@ -282,9 +289,15 @@ Installation methods being worked on include:
 ```
 crates.io: cargo install linux-disk-space-manager
 
+...
+
 compile from github source: cargo build --release && mv target/release/linux-disk-space-manager /usr/local/sbin/
 
+...
+
 install precompiled binary
+
+...
 
 use release debian package: sudo dpkg -i linux-disk-space-manager.deb
 
@@ -341,7 +354,7 @@ While the program is designed to be a daemon and run in the background, the prog
 
 This is especially useful for test and QA systems, testing the policy YAML and making sure the handling and data retention are as desired.
 
-Here is an example of running the linux-disk-space-manager manually in debug mode and having /tmp fill to 100% with policy that effectively cleans up from that condition:
+Here is an example of running the linux-disk-space-manager manually in debug mode:
 
 ```
 $ linux-disk-space-manager ./policy.yaml -d 2>&1 | tee disk_manager_$(date +%Y%m%d%H%M%S).log
@@ -384,7 +397,69 @@ $ linux-disk-space-manager ./policy.yaml -d 2>&1 | tee disk_manager_$(date +%Y%m
 ...
 ```
 
+We might run linux-disk-space-manager interactively instead of as a daemon. Here is an example of a user running it within their own `/home/` directory scope.
+
+
+Example user bob's policy:
+
+```
+daemon:
+  interval_seconds: 1
+  health_window: 3
+  lifecycle_interval_seconds: 600
+filesystems:
+  - mount: /home/bob/
+    thresholds:
+      - usage_percent: 70
+        commands:
+          - "nice find /home/bob/tmp -mindepth 1 -mtime +3 -delete"
+
+      - usage_percent: 85
+        commands:
+          - "nice find /home/bob/tmp -mindepth 1 -mtime +1 -delete"
+
+      - usage_percent: 97
+        commands:
+          - "rm -rf /home/bob/tmp/* /home/bob/logs/backups/* || find /home/bob/tmp -type f -exec rm -f {} \\;"
+
+lifecycle:
+  - pattern: /home/bob/log/**/*.gz
+    max_age_days: 14
+
+```
+
+Note that the system slice is commonly `/home` not `/home/bob`, so the metrics in bob's case are actually from the `/home` slice,
+so another user could fill up that slice, and non of bob's reactions would solve such a condition.
+
+But if each user has their own linux-disk-space-manager scope and policy, then all of `/home` is covered generally.
+
+Rather than having many copies and individual scopes, having a singular instance as root is more simple, easier to manager,
+reduces load on the system, and is less likely to encounter limits because of permissions or login groups, etc. One of 
+the reasons not to do that, is to separate security concerns. Individual developers may be more aware of the log files their
+tests create, so they may be the ones who should write policy. This is when individual user instances show more value.
+
+### operating systems
+
+This program is designed for linux systems with rapidly filling application logs, but can be run on other operating systems.
+
+OpenBSD 7.9 is working fine, tested on June 7th, 2026.
+
+All testing for releases are done on Debian Linux. Most unix-like systems should be able to get it working, via nix.
+
+The OS level upstream dependency for disk metrics is [nix](https://crates.io/crates/nix), which provides
+the interface to gether the disk usage information. If "nix" works, then linux-disk-space-manager likely works.
+It uses the `statvfs.blocks_free()`, and as of v1.0.8, also `statvfs.files_free()` to collect the required disk information.
+
+The command execution for reactions is built via `Command::new("sh")`, so any system with `sh` should work
+for the command execution. There is no intent on supporting other command execution binaries or options.
+
+Some amount of effort has been put in to shrink the binary size by default. This is to minimize the footprint
+on the underlying system. With binaries that are 700KB or so, we can include the software on extremely small
+systems. Update the Cargo.toml release section to adjust this if you want to optimize for debugging etc.
+
 # change log and version use
+
+1.0.9 - documentation and logging improvement updates
 
 1.0.8 - add inode calculation to the usage metrics, increase max wait period between reminder log lines
 
