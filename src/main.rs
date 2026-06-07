@@ -76,10 +76,10 @@ fn main() {
     for fs in &config.filesystems {
         let (used, total) = disk_bytes(&fs.mount);
         if total == 0 {
-            log.warn(&format!("startup: cannot read '{}' — check path or permissions", fs.mount));
+            log.warn(&format!("startup: cannot read '{}' - check path or permissions", fs.mount));
         } else {
             log.info(&format!(
-                "watching '{}' — {}/{} used ({:.1}%), {} threshold(s)",
+                "watching '{}' - {}/{} used ({:.1}%), {} threshold(s)",
                 fs.mount,
                 human_bytes(used),
                 human_bytes(total),
@@ -147,14 +147,14 @@ fn main() {
 
                     if state.active_cycles == 1 {
                         log.warn(&format!(
-                            "[{}] {:.1}% — {}% threshold reached (cycle 1/{})",
+                            "[{}] {:.1}% - {}% threshold reached (cycle 1/{})",
                             fs.mount, usage_pct, threshold.usage_percent, health_window
                         ));
                     }
 
                     if state.active_cycles >= health_window && !state.triggered {
                         log.warn(&format!(
-                            "[{}] {:.1}% >= {}% sustained for {} cycles — spawning {} reaction thread",
+                            "[{}] {:.1}% >= {}% sustained for {} cycles - spawning {} reaction thread",
                             fs.mount,
                             usage_pct,
                             threshold.usage_percent,
@@ -175,7 +175,7 @@ fn main() {
                     let reminder_period = (health_window * 10).max(600) as i32;
                     if state.triggered && state.active_cycles % reminder_period == 0 {
                         log.warn(&format!(
-                            "[{}] disk still at {:.1}% >= {}% — {} cycles since reactions fired",
+                            "[{}] disk still at {:.1}% >= {}% - {} cycles since reactions fired",
                             fs.mount, usage_pct, threshold.usage_percent, state.active_cycles
                         ));
                     }
@@ -188,7 +188,7 @@ fn main() {
 
                         if was_triggered {
                             log.info(&format!(
-                                "[{}] recovered below {}% — now at {:.1}% ({}/{})",
+                                "[{}] recovered below {}% - now at {:.1}% ({}/{})",
                                 fs.mount,
                                 threshold.usage_percent,
                                 usage_pct,
@@ -204,7 +204,7 @@ fn main() {
         let elapsed = cycle_start.elapsed();
         let sleep_for = time::Duration::from_secs(interval_secs).saturating_sub(elapsed);
         log.debug(&format!(
-            "cycle completed {:.0}ms — sleeping {:.0}ms",
+            "cycle completed {:.0}ms - sleeping {:.0}ms",
             elapsed.as_millis(),
             sleep_for.as_millis()
         ));
@@ -214,16 +214,16 @@ fn main() {
 
 fn print_help(prog: &str) {
     println!(
-        r#"linux-disk-space-manager v1.0.7 — Linux disk-space management daemon
+        r#"linux-disk-space-manager v1.0.7 - Linux disk-space management daemon
 
 USAGE:
     {prog} <policy.yaml> [-d|-w|-q]
 
 ARGUMENTS:
     <policy.yaml>   Path to YAML policy file (see below)
-    -d              Debug logging — per-cycle disk stats, command output
-    -w              Warn  logging — threshold events and reactions only
-    -q              Quiet         — errors to stderr only
+    -d              Debug logging - per-cycle disk stats, command output
+    -w              Warn  logging - threshold events and reactions only
+    -q              Quiet         - errors to stderr only
 
 POLICY FILE STRUCTURE:
 
@@ -258,7 +258,7 @@ POLICY FILE STRUCTURE:
         max_size_mb: 512
 
 NOTES:
-    - Thresholds are independent — each has its own health counter and
+    - Thresholds are independent - each has its own health counter and
       triggered state.  Multiple levels can be active simultaneously.
     - A threshold fires its commands exactly once per breach event.
       It resets when usage drops below the threshold percent.
