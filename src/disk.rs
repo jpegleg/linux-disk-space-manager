@@ -1,4 +1,4 @@
-// disk.rs — filesystem usage measurement
+// disk.rs - filesystem usage measurement
 //
 // Uses POSIX statvfs (via the nix crate) so it works without /proc parsing on
 // any Linux variant.  Returns a percentage in the range [0.0, 100.0].
@@ -7,7 +7,7 @@
 use nix::sys::statvfs::statvfs;
 
 /// Returns the used-space percentage (0.0–100.0) for the filesystem that
-/// `mount_path` lives on.  The path does not have to be a mount point — statvfs
+/// `mount_path` lives on.  The path does not have to be a mount point - statvfs
 /// reports figures for whichever filesystem owns the path.
 ///
 /// Returns 0.0 on error (statvfs failure or zero-size filesystem) and prints
