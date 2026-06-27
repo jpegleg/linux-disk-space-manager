@@ -69,7 +69,7 @@ fn main() {
         .unwrap_or(interval_secs);
 
     log.info(&format!(
-        "linux-disk-space-manager v1.0.8 started  policy={}  interval={}s  health_window={}  lifecycle_interval={}s",
+        "linux-disk-space-manager v1.0.9 started  policy={}  interval={}s  health_window={}  lifecycle_interval={}s",
         policy_path, interval_secs, health_window, lifecycle_interval_secs
     ));
 
