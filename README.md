@@ -483,6 +483,8 @@ systems. Update the Cargo.toml release section to adjust this if you want to opt
 
 # change log and version use
 
+1.0.10 - update depdenecy crate version for gethostname and remove deprecated yaml crate
+
 1.0.9 - documentation and logging improvement updates
 
 1.0.8 - add inode calculation to the usage metrics, increase max wait period between reminder log lines
