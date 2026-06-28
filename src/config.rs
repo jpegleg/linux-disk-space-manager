@@ -98,7 +98,7 @@ impl Config {
         let raw = fs::read_to_string(path)
             .map_err(|e| format!("cannot read '{}': {}", path, e))?;
 
-        let mut cfg: Config = serde_yaml::from_str(&raw)
+        let mut cfg: Config = yaml_serde::from_str(&raw)
             .map_err(|e| format!("YAML parse error in '{}': {}", path, e))?;
 
         for fs in &mut cfg.filesystems {
